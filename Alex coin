@@ -4,14 +4,18 @@
     <title>Simple Blockchain</title>
 </head>
 <body>
+    <!-- Input field and buttons for interacting with the blockchain -->
     Input a Number:
     <input id="text">
     <button onclick="add()" id="output0">Add Blockchain</button>
     <button onclick="invalidate()" id="output1">Invalidate Blockchain</button>
+    <!-- Display area for blockchain information -->
     <div id="display"><hr></div>
     <br>
 
+    <!-- JavaScript code for blockchain implementation -->
     <script>
+        // Define a Node constructor for linked list
         var Node = function(a) {
             this.next = null;
             this.prev = null;
@@ -19,6 +23,7 @@
             return this;
         }
 
+        // Define a List constructor for linked list
         var List = function(a) {
             this.head = null;
             this.tail = null;
@@ -26,6 +31,7 @@
             return this;
         }
 
+        // Function to convert the linked list to a string
         List.prototype.listToString = function() {
             var str = '';
             var anode = this.head;
@@ -36,6 +42,7 @@
             return str;
         }
 
+        // Function to add a new node to the linked list
         List.prototype.push = function(a) {
             var node = new Node(a);
             if (this.head == null) {
@@ -52,6 +59,7 @@
             return node;
         }
 
+        // Function to remove the last node from the linked list
         List.prototype.pop = function() {
             var poppedNode = this.tail;
             if (this.head == null) {
@@ -70,10 +78,12 @@
             return poppedNode;
         }
 
+        // Function to get the last node in the linked list
         List.prototype.peek = function() {
             return this.tail;
         }
 
+        // Define a Block constructor for blockchain
         class Block {
             constructor(data, previousHash = '') {
                 this.data = data;
@@ -81,33 +91,39 @@
                 this.hash = '';
             }
 
+            // Function to calculate the hash of a block
             calculateHash() {
                 return SHA1(this.previousHash + JSON.stringify(this.data)).toString();
             }
         }
 
+        // Define a Blockchain constructor
         class Blockchain {
             constructor() {
                 this.chain = new List();
                 this.createGenesisBlock();
             }
 
+            // Function to create the genesis block
             createGenesisBlock() {
                 const block = new Block("Genesis Block", "0");
                 block.hash = block.calculateHash();
                 this.chain.push(block);
             }
 
+            // Function to get the latest block in the blockchain
             getLatestBlock() {
                 return this.chain.peek();
             }
 
+            // Function to add a new block to the blockchain
             addBlock(amt) {
                 const block = new Block(amt);
                 block.previousHash = this.getLatestBlock().key.hash;
                 block.hash = block.calculateHash();
                 this.chain.push(block);
 
+                // Display blockchain information on the webpage
                 var outputArea = document.getElementById('display');
                 outputArea.innerHTML += 'Adding block: <br>'
                 outputArea.innerHTML += 'Data: ' + amt + '<br>';
@@ -115,6 +131,7 @@
                 outputArea.innerHTML += 'Hash: ' + block.hash + '<br>';
             }
 
+            // Function to check the validity of the blockchain
             isChainValid() {
                 var prev = this.chain.head.key;
                 var curr = this.chain.head.next.key;
@@ -132,8 +149,10 @@
             }
         }
 
+        // Create a new blockchain instance
         let Alexcoin = new Blockchain();
 
+        // Function to add a block to the blockchain and check its validity
         function add() {
             var amt = document.getElementById('text').value;
             Alexcoin.addBlock(amt);
@@ -147,6 +166,7 @@
             outputArea.innerHTML += '<hr>';
         }
 
+        // Function to invalidate the head block of the blockchain and check its validity
         function invalidate() {
             var outputArea = document.getElementById('display');
             var amt = document.getElementById('text').value;
@@ -162,6 +182,7 @@
             }
         }
 
+        // Secure Hash Algorithm SHA1SUM
         function SHA1(msg) {
             function rotate_left(n, s) {
                 var t4 = (n << s) | (n >>> (32 - s));
@@ -267,7 +288,7 @@
                 }
 
                 for (i = 20; i <= 39; i++) {
-                    temp = (rotate_left(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff;
+                    temp = (rotate_left(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EVA1) & 0x0ffffffff;
                     E = D;
                     D = C;
                     C = rotate_left(B, 30);
